@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddWordActivity"></activity>
+        <activity android:name=".WordInfoActivity"></activity>
+        <activity android:name=".WordsInThemeActivity" />
+        <activity android:name=".AddWordActivity" />
         <activity android:name=".AddThemeActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
