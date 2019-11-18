@@ -9,14 +9,15 @@ import android.widget.ListView;
 
 public class WordsInThemeActivity extends ListActivity
 {
-    // выбранная тема
+    /* выбранная тема */
     Theme theme;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        // получить тему из контекста, заполнить список словами
+        /* получить тему из контекста, заполнить список словами */
         theme = (Theme) getIntent().getSerializableExtra(Theme.class.getSimpleName());
         String[] words = theme.wordsToStringArray();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
