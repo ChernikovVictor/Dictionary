@@ -2,10 +2,18 @@ package com.example.dictionary;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class WordsInThemeActivity extends ListActivity
 {
@@ -20,9 +28,23 @@ public class WordsInThemeActivity extends ListActivity
         /* получить тему из контекста, заполнить список словами */
         theme = (Theme) getIntent().getSerializableExtra(Theme.class.getSimpleName());
         String[] words = theme.wordsToStringArray();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, words);
-        setListAdapter(adapter);
+
+        getListView().setBackgroundColor(Color.parseColor("#001F3F"));
+
+        this.setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, words) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = (TextView) view.findViewById(android.R.id.text1);
+
+                textView.setTextColor(Color.parseColor("#FF851B"));
+                textView.setTextSize(30);
+                Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/Grinched 2.0.ttf");
+                textView.setTypeface(typeface);
+                return view;
+            }
+        });
     }
 
     // событие: клик по элементу списка (по слову)

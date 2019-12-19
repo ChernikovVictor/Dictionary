@@ -1,13 +1,19 @@
 package com.example.dictionary;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -42,8 +48,7 @@ public class MainActivity extends AppCompatActivity {
         String[] themeNames = Theme.themesToStringArray(themes);
 
         /* адаптер данных для содержимого ListView */
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, themeNames);
+        ArrayAdapter<String> adapter = createStringAdapter(themeNames);
         listThemes.setAdapter(adapter);
 
         // событие: нажатие на элемента списка
@@ -60,7 +65,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /* Событи: нажали на кнопку добваления темы */
+    /* Адаптер для элементов ListView */
+    private ArrayAdapter<String> createStringAdapter(final String[] themeNames) {
+        return new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, themeNames) {
+                @NonNull
+                @Override
+                public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                    View view = super.getView(position, convertView, parent);
+                    TextView textView = (TextView) view.findViewById(android.R.id.text1);
+
+                    textView.setTextColor(Color.parseColor("#FF851B"));
+                    textView.setTextSize(30);
+                    Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/Grinched 2.0.ttf");
+                    textView.setTypeface(typeface);
+                    return view;
+                }
+            };
+    }
+
+    /* Событие: нажали на кнопку добавления темы */
     public void onClickAddTheme(View view) {
         Intent intent = new Intent(this, AddThemeActivity.class);
 
@@ -115,8 +138,7 @@ public class MainActivity extends AppCompatActivity {
         String[] themeNames = Theme.themesToStringArray(themes);
 
         /* адаптер данных для содержимого ListView */
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, themeNames);
+        ArrayAdapter<String> adapter = createStringAdapter(themeNames);
         listThemes.setAdapter(adapter);
     }
 

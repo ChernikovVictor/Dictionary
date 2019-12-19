@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/stars"
     tools:context=".AddWordActivity">
 
     <TextView
@@ -14,6 +15,7 @@
         android:layout_marginTop="25dp"
         android:text="Добавить слово"
         android:textSize="24sp"
+        android:textColor="#FF851B"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,6 +27,8 @@
         android:layout_marginTop="72dp"
         android:ems="10"
         android:hint="слово"
+        android:textColor="#FF851B"
+        android:textColorHint="#FF851B"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,6 +40,8 @@
         android:layout_marginTop="130dp"
         android:ems="10"
         android:hint="перевод\\значение"
+        android:textColorHint="#FF851B"
+        android:textColor="#FF851B"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,6 +53,7 @@
         android:layout_marginTop="200dp"
         android:text="Тема:"
         android:textSize="18sp"
+        android:textColor="#FF851B"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,17 +63,19 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="200dp"
+        android:textColor="#FF851B"
         app:layout_constraintStart_toEndOf="@+id/textViewTheme"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonAddWord"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:text="Добавить"
+        android:layout_width="148dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="64dp"
+        android:background="@drawable/button_shape_1"
         android:onClick="onClickAdd"
+        android:text="Добавить"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTheme" />
 </androidx.constraintlayout.widget.ConstraintLayout>
