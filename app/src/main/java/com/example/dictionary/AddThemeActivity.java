@@ -2,16 +2,13 @@ package com.example.dictionary;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class AddThemeActivity extends AppCompatActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,17 +18,18 @@ public class AddThemeActivity extends AppCompatActivity {
 
     public void onClickAdd(View view) {
 
-        /* Интент вернется родительской активности*/
-        Intent intent = new Intent();
+        /* подключиться к БД */
+        SQLiteDatabase dbThemes = getBaseContext().openOrCreateDatabase("Themes.db", MODE_PRIVATE, null);
+        dbThemes.execSQL("CREATE TABLE IF NOT EXISTS themes (theme TEXT PRIMARY KEY);");
 
+        /* Добавить тему в БД */
         EditText editText = findViewById(R.id.Theme);
-        Theme theme = new Theme(editText.getText().toString());
-        intent.putExtra("theme", theme);
+        String theme = editText.getText().toString();
+        try {
+            dbThemes.execSQL("INSERT INTO themes VALUES ('" + theme + "');");
+        } catch (SQLException ignored) { }
 
-        /* Вернуть родительской активности интент с результирующим кодом */
-        setResult(RESULT_OK, intent);
-
-        /* Завершить работу активности*/
-        finish();
+        dbThemes.close();
+        finish();   // Завершить работу активности
     }
 }

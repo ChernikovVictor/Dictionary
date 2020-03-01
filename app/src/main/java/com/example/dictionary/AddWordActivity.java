@@ -4,9 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +23,18 @@ public class AddWordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_word);
 
-        /* Получить названия тем из переданного списка тем */
-        String[] themesNames = Theme.themesToStringArray(
-                (ArrayList<Theme>) getIntent().getSerializableExtra("themes"));
+        /* Получить названия тем из БД */
+        ArrayList<String> themesNames = new ArrayList<>();
+        SQLiteDatabase dbThemes = getBaseContext().openOrCreateDatabase("Themes.db", MODE_PRIVATE, null);
+        dbThemes.execSQL("CREATE TABLE IF NOT EXISTS themes (theme TEXT PRIMARY KEY);");
+        Cursor query = dbThemes.rawQuery("SELECT * FROM themes;", null);
+        if (query.moveToFirst()){
+            do {
+                themesNames.add(query.getString(0));
+            } while (query.moveToNext());
+        }
+        query.close();
+        dbThemes.close();
 
         /* Заполнить данные спиннера именами тем */
         Spinner spinner = findViewById(R.id.spinner);
@@ -50,19 +59,14 @@ public class AddWordActivity extends AppCompatActivity {
         TextView wordTextView = findViewById(R.id.Word);
         TextView translationTextView = findViewById(R.id.Translation);
 
-        Word word = new Word(wordTextView.getText().toString(),
-                translationTextView.getText().toString());
-        String theme = spinner.getSelectedItem().toString();
+        /* добавить в БД */
+        SQLiteDatabase dbWords = getBaseContext().openOrCreateDatabase("Words.db", MODE_PRIVATE, null);
+        dbWords.execSQL("CREATE TABLE IF NOT EXISTS words (name TEXT, translation TEXT, theme TEXT);");
+        dbWords.execSQL(String.format("INSERT INTO words VALUES ('%s', '%s','%s');",
+                wordTextView.getText().toString(), translationTextView.getText().toString(),
+                spinner.getSelectedItem().toString()));
+        dbWords.close();
 
-        /* Интент вернется родительской активности*/
-        Intent intent = new Intent();
-        intent.putExtra("theme", theme);
-        intent.putExtra("word", word);
-
-        /* Вернуть родительской активности интент с результирующим кодом */
-        setResult(RESULT_OK, intent);
-
-        /* Завершить работу активности*/
-        finish();
+        finish();   // Завершить работу активности
     }
 }
