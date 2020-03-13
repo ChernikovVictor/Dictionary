@@ -25,16 +25,17 @@ public class AddWordActivity extends AppCompatActivity {
 
         /* Получить названия тем из БД */
         ArrayList<String> themesNames = new ArrayList<>();
-        SQLiteDatabase dbThemes = getBaseContext().openOrCreateDatabase("Themes.db", MODE_PRIVATE, null);
-        dbThemes.execSQL("CREATE TABLE IF NOT EXISTS themes (theme TEXT PRIMARY KEY);");
-        Cursor query = dbThemes.rawQuery("SELECT * FROM themes;", null);
+        SQLiteDatabase dbDictionary = getBaseContext().openOrCreateDatabase("Dictionary.db", MODE_PRIVATE, null);
+        dbDictionary.execSQL("CREATE TABLE IF NOT EXISTS themes (id INTEGER PRIMARY KEY AUTOINCREMENT, theme TEXT);");
+
+        Cursor query = dbDictionary.rawQuery("SELECT theme FROM themes;", null);
         if (query.moveToFirst()){
             do {
                 themesNames.add(query.getString(0));
             } while (query.moveToNext());
         }
         query.close();
-        dbThemes.close();
+        dbDictionary.close();
 
         /* Заполнить данные спиннера именами тем */
         Spinner spinner = findViewById(R.id.spinner);
@@ -59,12 +60,18 @@ public class AddWordActivity extends AppCompatActivity {
         TextView wordTextView = findViewById(R.id.Word);
         TextView translationTextView = findViewById(R.id.Translation);
 
-        /* добавить в БД */
-        SQLiteDatabase dbWords = getBaseContext().openOrCreateDatabase("Words.db", MODE_PRIVATE, null);
+        /* определить ID выбранной темы */
+        SQLiteDatabase dbWords = getBaseContext().openOrCreateDatabase("Dictionary.db", MODE_PRIVATE, null);
+        Cursor query = dbWords.rawQuery("SELECT id FROM themes WHERE theme = '"
+                + spinner.getSelectedItem().toString() + "';", null);
+        query.moveToFirst();
+        int id = query.getInt(0);
+        query.close();
+
+        /* добавить слово в БД */
         dbWords.execSQL("CREATE TABLE IF NOT EXISTS words (name TEXT, translation TEXT, theme TEXT);");
-        dbWords.execSQL(String.format("INSERT INTO words VALUES ('%s', '%s','%s');",
-                wordTextView.getText().toString(), translationTextView.getText().toString(),
-                spinner.getSelectedItem().toString()));
+        dbWords.execSQL(String.format("INSERT INTO words VALUES ('%s', '%s', '%s');",
+                wordTextView.getText().toString(), translationTextView.getText().toString(), id));
         dbWords.close();
 
         finish();   // Завершить работу активности

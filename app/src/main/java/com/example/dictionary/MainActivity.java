@@ -77,18 +77,18 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> result = new ArrayList<>();
 
         /* подключиться к БД*/
-        SQLiteDatabase dbThemes = getBaseContext().openOrCreateDatabase("Themes.db", MODE_PRIVATE, null);
-        dbThemes.execSQL("CREATE TABLE IF NOT EXISTS themes (theme TEXT PRIMARY KEY);");
+        SQLiteDatabase dbDictionary = getBaseContext().openOrCreateDatabase("Dictionary.db", MODE_PRIVATE, null);
+        dbDictionary.execSQL("CREATE TABLE IF NOT EXISTS themes (id INTEGER PRIMARY KEY AUTOINCREMENT, theme TEXT);");
 
         /* получить темы из БД, заполнить список */
-        Cursor query = dbThemes.rawQuery("SELECT * FROM themes;", null);
+        Cursor query = dbDictionary.rawQuery("SELECT theme FROM themes;", null);
         if (query.moveToFirst()){
             do {
                 result.add(query.getString(0));
             } while (query.moveToNext());
         }
         query.close();
-        dbThemes.close();
+        dbDictionary.close();
 
         return result;
     }

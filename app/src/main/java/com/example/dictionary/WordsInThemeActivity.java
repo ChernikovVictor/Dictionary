@@ -28,19 +28,22 @@ public class WordsInThemeActivity extends ListActivity
         super.onCreate(savedInstanceState);
 
         /* подключиться к базе данных */
-        SQLiteDatabase dbWords = getBaseContext().openOrCreateDatabase("Words.db", MODE_PRIVATE, null);
-        dbWords.execSQL("CREATE TABLE IF NOT EXISTS words (name TEXT, translation TEXT, theme TEXT);");
+        SQLiteDatabase dbDictionary = getBaseContext().openOrCreateDatabase("Dictionary.db", MODE_PRIVATE, null);
+        dbDictionary.execSQL("CREATE TABLE IF NOT EXISTS words (name TEXT, translation TEXT, themeID INTEGER);");
 
-        /* получить тему из контекста, заполнить список словами из БД*/
+        /* получить тему из контекста, заполнить список словами из БД */
         String theme = getIntent().getStringExtra("theme");
-        Cursor query = dbWords.rawQuery("SELECT name, translation FROM words WHERE theme = '" + theme + "';", null);
+        Cursor query = dbDictionary.rawQuery("SELECT id FROM themes WHERE theme = '" + theme + "';", null);
+        query.moveToFirst();
+        int id = query.getInt(0);
+        query = dbDictionary.rawQuery("SELECT name, translation FROM words WHERE themeID = '" + id + "';", null);
         if (query.moveToFirst()) {
             do {
                 words.add(query.getString(0) + " - " + query.getString(1));
             } while (query.moveToNext());
         }
         query.close();
-        dbWords.close();
+        dbDictionary.close();
 
         getListView().setBackgroundColor(Color.parseColor("#001F3F"));
         this.setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, words) {

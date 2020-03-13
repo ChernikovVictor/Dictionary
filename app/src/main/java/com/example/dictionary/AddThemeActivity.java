@@ -19,17 +19,17 @@ public class AddThemeActivity extends AppCompatActivity {
     public void onClickAdd(View view) {
 
         /* подключиться к БД */
-        SQLiteDatabase dbThemes = getBaseContext().openOrCreateDatabase("Themes.db", MODE_PRIVATE, null);
-        dbThemes.execSQL("CREATE TABLE IF NOT EXISTS themes (theme TEXT PRIMARY KEY);");
+        SQLiteDatabase dbDictionary = getBaseContext().openOrCreateDatabase("Dictionary.db", MODE_PRIVATE, null);
+        dbDictionary.execSQL("CREATE TABLE IF NOT EXISTS themes (id INTEGER PRIMARY KEY AUTOINCREMENT, theme TEXT);");
 
         /* Добавить тему в БД */
         EditText editText = findViewById(R.id.Theme);
         String theme = editText.getText().toString();
         try {
-            dbThemes.execSQL("INSERT INTO themes VALUES ('" + theme + "');");
+            dbDictionary.execSQL("INSERT INTO themes (theme) VALUES ('" + theme + "');");
         } catch (SQLException ignored) { }
 
-        dbThemes.close();
+        dbDictionary.close();
         finish();   // Завершить работу активности
     }
 }
